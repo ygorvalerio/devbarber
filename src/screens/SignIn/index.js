@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Text } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import {Container, 
         InputArea,
         CustomButton,
@@ -16,10 +16,24 @@ import LockIcon from "../../assets/lock.svg"
 
 export default () => {
 
+    const navigation = useNavigation();
 
     const [emailField, setEmailField] = useState ('');
     const [passwordField, setPasswordField] = useState ('');
+    
+   
+   const handleSignClick = () => {
 
+
+   }                                                             //botão de acesso ao login
+
+    const handleMessageButtonClick = () => {
+        navigation.reset({
+            routes: [{name: "SignUp"}]
+    
+        });
+
+    }                                                            //botão de cadastro ação
 
     return (
         <Container>
@@ -30,21 +44,24 @@ export default () => {
                <SignInput 
                         IconSvg = {EmailIcon} 
                         placeholder="Digite seu e-mail"
-                        value={emailField}  
+                        value={emailField}
+                        onChangeText={t=>setEmailField(t)}  
                />
                
                <SignInput 
                         IconSvg={LockIcon} 
                         placeholder="Digite sua senha"
                         value={passwordField} 
+                        onChangeText={t=>setPasswordField(t)}
+                        password={true}
                />
             
-                <CustomButton>
+                <CustomButton onPress={handleSignClick}>
                      <CustomButtonText> LOGIN </CustomButtonText>
                 </CustomButton>
             </InputArea>
 
-            <SignMessageButton>
+            <SignMessageButton onPress={handleMessageButtonClick}>
                 <SignMessageButtonText> Ainda não possui uma conta? </SignMessageButtonText> 
                 <SignMessageButtonTextBold>Cadastre-se</SignMessageButtonTextBold>
             </SignMessageButton>

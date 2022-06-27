@@ -18,7 +18,7 @@ const InputArea = styled.View`
         color: #268596;
         margin-left: 10px;
     `;
-    export default ({IconSvg, placeholder, value}) => {
+    export default ({IconSvg, placeholder, value, onChangeText, password}) => {
 
         return(
             <InputArea>
@@ -27,6 +27,9 @@ const InputArea = styled.View`
                 placeholder={placeholder}
                 placeholderTextColor="#268596"
                 value={value}
+                onChangeText={onChangeText}
+                secureTextEntry={password}
+
                 
                 />
                    
