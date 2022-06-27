@@ -16,8 +16,8 @@ import LockIcon from "../../assets/lock.svg"
 
 export default () => {
 
-    const [emailField, setEmailField] = useState ('ygooooo');
-    const [passwordField, setPasswordField] = useState ('');
+    const [emailField, setEmailField] = useState ('@@@@@');
+    const [passwordField, setPasswordField] = useState ('@');
 
     return (
         <Container>
