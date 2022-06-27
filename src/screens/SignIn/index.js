@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import { useNavigation } from "@react-navigation/native";
+import Api from "../../Api";
 import {Container, 
         InputArea,
         CustomButton,
@@ -21,11 +22,31 @@ export default () => {
     const [emailField, setEmailField] = useState ('');
     const [passwordField, setPasswordField] = useState ('');
     
-   
-   const handleSignClick = () => {
+    const handleSignClick = async () => {
+        if(nameField != '' && emailField != '' && passwordField != '') {
+            let res = await Api.signUp(nameField, emailField, passwordField);
+            
+            if(res.token) {
+                await AsyncStorage.setItem('token', res.token);
 
+                userDispatch({
+                    type: 'setAvatar',
+                    payload:{
+                        avatar: res.data.avatar
+                    }
+                });
 
-   }                                                             //botão de acesso ao login
+                navigation.reset({
+                    routes:[{name:'MainTab'}]
+                });
+
+            } else {
+                alert("Erro: "+res.error);
+            }
+        } else {
+            alert("Preencha os campos");
+        }
+    }                                                          //botão de acesso ao login
 
     const handleMessageButtonClick = () => {
         navigation.reset({

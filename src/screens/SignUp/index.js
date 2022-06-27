@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import Api from "../../Api";
 import { useNavigation } from "@react-navigation/native";
 import {Container, 
         InputArea,
