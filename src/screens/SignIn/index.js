@@ -17,7 +17,7 @@ import LockIcon from "../../assets/lock.svg"
 export default () => {
 
 
-    const [emailField, setEmailField] = useState ('larii');
+    const [emailField, setEmailField] = useState ('');
     const [passwordField, setPasswordField] = useState ('');
 
 
