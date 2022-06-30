@@ -1,5 +1,8 @@
 import React, {useState} from "react";
 import Api from "../../Api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import {UserContext} from "../../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import {Container, 
         InputArea,
@@ -17,7 +20,7 @@ import LockIcon from "../../assets/lock.svg"
 import PersonIcon from "../../assets/person.svg"
 
 export default () => {
-
+    const {dispatch: userDispatch} = useContext(UserContext);
     const navigation = useNavigation();
 
 
@@ -25,8 +28,33 @@ export default () => {
     const [passwordField, setPasswordField] = useState ('');
     const [nameField, setNameField] = useState ('');
    
-   const handleSignClick = () => {
+   const handleSignClick = async () => {
+        if(nameField != '' && emailField != '' && passwordField != ''){
+            let res = await Api.signUp(nameField,emailField,passwordField)
+            if(res.token) {
+                await AsyncStorage.setItem('token', json.token);      // Salva ás informações 
 
+            userDispatch({
+                type: 'setAvatar',
+                payload: {
+                    avatar: json.data.avatar
+                }
+            });
+
+            navigation.reset({
+                routes: [{name:'MainTab'}]     //Chamado a tela Main Tab
+
+            });
+
+            } else{
+                alert("Erro: " + res.error);
+            }
+
+        } else {
+            alert("Preencha os campos");
+
+
+        }
 
    }                                                             //botão de acesso ao login
 

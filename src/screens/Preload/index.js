@@ -1,19 +1,41 @@
-import React, { useEffect} from "react";
+import React, { useEffect, useContext } from "react";
 import {Container, LoadingIcon} from './styles';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import BarberLogo from "../../assets/barber.svg";
+import { UserContext } from "../../contexts/UserContext";
+
+import Api from "../../Api";
 
 
 export default () => {
-
- const navigation = useNavigation();
+    const {dispatch: userDispatch} = useContext(UserContext);
+    const navigation = useNavigation();
 
     useEffect (()=> {
         const checkToken = async () => {
              const token = await AsyncStorage.getItem('token');
-            if(token !== null){
-                // validar token
+            if(token){
+                let res = await Api.checkToken(token);
+                if(res.token){
+                    await AsyncStorage.setItem('token', json.token);      // Salva ás informações 
+
+                    userDispatch({
+                        type: 'setAvatar',
+                        payload: {
+                            avatar: json.data.avatar
+                        }
+                    });
+        
+                    navigation.reset({
+                        routes: [{name:'MainTab'}]     //Chamado a tela Main Tab
+        
+                    });
+
+                      } else {
+                        navigation.navigate('SignIn')
+                      }
+
             } else {
                 navigation.navigate('SignIn')
 
