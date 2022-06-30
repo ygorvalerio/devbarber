@@ -8,11 +8,11 @@ export const initialState = {
     appointemets:[]
 };
 
-export const UserReducer = () => {
+export const UserReducer = (state, action) => {
 
-    switch(Action.type) {
+    switch(action.type) {
         case 'setAvatar':
-            return {...state, avatar:action.payload};
+            return {...state, avatar: action.payload.avatar};
             break;
             default:
                 return state;

@@ -1,6 +1,9 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Api from "../../Api";
+
+import {UserContext} from "../../contexts/UserContext";
 import {Container, 
         InputArea,
         CustomButton,
@@ -16,37 +19,43 @@ import EmailIcon from "../../assets/email.svg";
 import LockIcon from "../../assets/lock.svg"
 
 export default () => {
-
+    const {dispatch: userDispatch} = useContext(UserContext);
     const navigation = useNavigation();
 
     const [emailField, setEmailField] = useState ('');
     const [passwordField, setPasswordField] = useState ('');
     
-    const handleSignClick = async () => {
-        if(nameField != '' && emailField != '' && passwordField != '') {
-            let res = await Api.signUp(nameField, emailField, passwordField);
-            
-            if(res.token) {
-                await AsyncStorage.setItem('token', res.token);
+   
+   const handleSignClick = async () => {
+    if(emailField != '' && passwordField != '') {
 
-                userDispatch({
-                    type: 'setAvatar',
-                    payload:{
-                        avatar: res.data.avatar
-                    }
-                });
+        let json = await Api.signIn(emailField,passwordField);
+        if(json.token) {
+            await AsyncStorage.setItem('token', json.token);
 
-                navigation.reset({
-                    routes:[{name:'MainTab'}]
-                });
+            userDispatch({
+                type: 'setAvatar',
+                payload: {
+                    avatar: json.data.avatar
+                }
+            });
 
-            } else {
-                alert("Erro: "+res.error);
-            }
-        } else {
-            alert("Preencha os campos");
+            navigation.reset({
+                routes: [{name:'MainTab'}]
+
+            });
+
+
+
+        } else{
+            alert ('E-mail e/ou senha errados');
         }
-    }                                                          //botão de acesso ao login
+
+    } else {
+            alert("Preencha os campos!")
+    }
+
+   }                                                             //botão de acesso ao login
 
     const handleMessageButtonClick = () => {
         navigation.reset({
