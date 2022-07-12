@@ -1,9 +1,9 @@
-import React, { useState }from "react";
-//import { request, PERMISSIONS } from "react-native-permissions";
-//import Geolocation from "@react-native-community/geolocation";
+import React, { useState,  useEffect }from "react";
+
 import { Platform } from "react-native";
 import { Text } from "react-native";
 import Search from "../Search";
+import * as Location from 'expo-location';
 
 import SearchIcon from '../../assets/search.svg';
 import MyLocationIcon from "../../assets/my_location.svg";
@@ -27,25 +27,39 @@ export default () => {
 
     const navigation = useNavigation();
    
-    //const [locationText, setLocationText] = useState('');
-  //  const [coords, setCoods] = useState(null);
+    const [locationText, setLocationText] = useState('');
+    
+    const [coords, setCoods] = useState(null);
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
    
-    /*const handleLocationFinder = async () => {
-        setCoods(null);
-        let result = request(
-            Platform.OS === 'ios' ?
-            PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
-            :
-            PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
-        );
-        if(result == 'granted') {
-            Geolocation.getCurrentPosition((info)=>
-            {
-                console.log(info);
-            });
-        }
-        }
-*/
+    
+      
+        const handleLocationFinder = () =>
+        { useEffect(() => {
+          (async () => {
+            if (Platform.OS === 'android' && !Device.isDevice) {
+              setErrorMsg(
+                'Oops, this will not work on Snack in an Android Emulator. Try it on your device!'
+              );
+              return;
+            }
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+              setErrorMsg('Permission to access location was denied');
+              return;
+            }
+      
+            let location = await Location.getCurrentPositionAsync({});
+            console.log(location);
+          })();
+        });
+    }
+    
+
+     
+        
+
         return (
             <Container>
                 <Scroller>  
@@ -60,9 +74,11 @@ export default () => {
                         <LocationInput
                          placeholder="Onde você está?"
                          placeholderTextColor="#FFFFFF"
+                         value={locationText}
+                         onChangeText={t=>setLocationText(t)}
                         
                          />
-                        <LocationFinder>  
+                        <LocationFinder onPress={handleLocationFinder}>  
                             <MyLocationIcon width="24" height="24" fill="#FFFFFF"/>
                         </LocationFinder>
 
